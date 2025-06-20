@@ -5,8 +5,9 @@ import { addItemToCart } from "../cart/cartSlice";
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [isLoading, setLoading] = useState(false);
-    const dispatch = useDispatch()
 
+    const dispatch = useDispatch()
+    
     useEffect(() => {
         const fetchProducts = async () => {
             setLoading(true);
