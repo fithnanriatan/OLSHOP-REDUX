@@ -1,17 +1,18 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { X, Plus, Minus, ShoppingBag, MessageCircle } from 'lucide-react';
 import Modal from "../../components/Modal"
-import { selectCartItems, selectCartItemsCount, selectCartTotalPrice } from "./cartSlice"
+import { plusQuantityToCart, minusQuantityToCart, selectCartItems, selectCartItemsCount, selectCartTotalPrice, removeItemToCart } from "./cartSlice"
 
 const CartModal = ({handleHideModalCart}) => {
     const totalItems = useSelector(selectCartItemsCount)
     const totalPrice = useSelector(selectCartTotalPrice)
     const cartItems = useSelector(selectCartItems)
 
+    
     const formatPrice = (price) => {
         return new Intl.NumberFormat('id-ID', {
             style: 'currency',
-            currency: 'IDR',
+            currency: 'USD',
             minimumFractionDigits: 0
         }).format(price);
     };
@@ -26,6 +27,20 @@ const CartModal = ({handleHideModalCart}) => {
 
         const URL = `https://wa.me/6285920006849?text=${message}`;
         window.open(URL, '_blank');
+    }
+
+    const dispatch = useDispatch();
+
+    const handlePlusQuantity = (id) => {
+        dispatch(plusQuantityToCart(id));
+    }
+
+    const handleMinusQuantity = (id) => {
+        dispatch(minusQuantityToCart(id));
+    }
+
+    const handleRemoveItem = (id) => {
+        dispatch(removeItemToCart(id));
     }
 
     return (
@@ -77,13 +92,18 @@ const CartModal = ({handleHideModalCart}) => {
 
                                 {/* Quantity Controls */}
                                 <div className="flex items-center gap-3 mt-3">
-                                    <button className="p-1 hover:bg-blue-100 rounded-full transition-colors group">
+                                    <button 
+                                    className="p-1 hover:bg-blue-100 rounded-full transition-colors group"
+                                    onClick={() => handleMinusQuantity(product.id)}
+                                    >
                                         <Minus className="w-4 h-4 text-gray-600 group-hover:text-blue-600" />
                                     </button>
                                     <span className="px-3 py-1 bg-white rounded-lg border font-medium min-w-[3rem] text-center">
                                         {product.quantity}
                                     </span>
-                                    <button className="p-1 hover:bg-blue-100 rounded-full transition-colors group">
+                                    <button
+                                     className="p-1 hover:bg-blue-100 rounded-full transition-colors group"
+                                     onClick={() => handlePlusQuantity(product.id)}>
                                         <Plus className="w-4 h-4 text-gray-600 group-hover:text-blue-600" />
                                     </button>
                                 </div>
@@ -101,7 +121,10 @@ const CartModal = ({handleHideModalCart}) => {
                                         </div>
                                     )}
                                 </div>
-                                <button className="text-red-500 text-sm hover:text-red-700 transition-colors">
+                                <button 
+                                className="text-red-500 text-sm hover:text-red-700 transition-colors"
+                                onClick={() => handleRemoveItem(product.id)}
+                                >
                                     Remove
                                 </button>
                             </div>

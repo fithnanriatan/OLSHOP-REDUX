@@ -26,11 +26,48 @@ export const cartSlice = createSlice({
         });
       }
     },
-    removeItemToCart: () => {},
+    removeItemToCart: (state, action) => {
+      const itemId = action.payload;
+      const selectedCartIndex = state.items.findIndex(
+        (product) => product.id === itemId
+      );
+
+      if (selectedCartIndex !== -1) {
+        state.items.splice(selectedCartIndex, 1);
+      }
+    },
+    plusQuantityToCart: (state, action) => {
+      const itemId = action.payload;
+      const selectedCartIndex = state.items.findIndex(
+        (product) => product.id === itemId
+      );
+
+      if (selectedCartIndex !== -1) {
+        const cartIndex = state.items[selectedCartIndex];
+        cartIndex.quantity += 1;
+        cartIndex.totalPrice = cartIndex.quantity * cartIndex.price;
+      }
+    },
+    minusQuantityToCart: (state, action) => {
+      const itemId = action.payload;
+      const selectedCartIndex = state.items.findIndex(
+        (product) => product.id === itemId
+      );
+
+      if (selectedCartIndex !== -1) {
+        const cartIndex = state.items[selectedCartIndex];
+        if (cartIndex.quantity > 1) {
+          cartIndex.quantity -= 1;
+          cartIndex.totalPrice = cartIndex.quantity * cartIndex.price;
+        } else {
+          state.items.splice(selectedCartIndex, 1);
+        }
+      }
+    },
   },
 });
 
-export const { addItemToCart, removeItemToCart } = cartSlice.actions;
+export const { addItemToCart, removeItemToCart, plusQuantityToCart, minusQuantityToCart } = cartSlice.actions;
 
 export default cartSlice;
 

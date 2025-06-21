@@ -15,15 +15,22 @@ function App() {
   const handleHideModalCart = () => {
     setIsOpenModalCart(false)
   }
+  
   return (
-    <>
-      {isOpenModalCart ? <CartModal handleHideModalCart={handleHideModalCart} /> : null}
-      <Header handleOpenModalCart={handleOpenModalCart} />
-      <main className='max-w-7xl mx-auto px-4 '>
-        <ProductList />
-      </main>
-    </>
-  )
+  <div className="min-h-screen flex flex-col bg-gray-50">
+    {isOpenModalCart && (
+      <CartModal handleHideModalCart={handleHideModalCart} />
+    )}
+
+    <Header handleOpenModalCart={handleOpenModalCart} />
+
+    <main className="flex-1 max-w-7xl mx-auto px-4 py-6">
+      
+      <ProductList handleOpenModalCart={handleOpenModalCart} />
+    </main>
+  </div>
+);
+
 }
 
 export default App
